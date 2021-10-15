@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Secure Calulator - App</title>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/js/calculator.js"></script>
+  </head>
+  <body>
+    <h1>Calculator page</h1>
+    <h2>{{value}}</h2>
+    <form action="/calculate" method="post">
+      <label for="num1">First Number: </label>
+      <input type="text" name="number1" id="num1" required /><br><br>
+
+      <label class="form-control" for="op">Operation: </label>
+      <select name="operation" id="op" required>
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select><br><br>
+
+      <label for="num2">Second Number: </label>
+      <input type="text" name="number2" id="num2" required /><br><br>
+      <input type="submit" value="Calculate">
+    </form>
+    <h3>Results:</h3>
+    {{answer}}<br>
+    {{addi}}<br>
+    {{subt}}<br>
+    {{mult}}<br>
+    {{divi}}
+
+    <hr>
+    <h2>A Secure Calculator using JavaScript Methods</h2>
+    <form id="calcForm">
+      <label for="num1">First Number: </label>
+      <input type="text" name="number1" id="num1JS" required /><br><br>
+
+      <label class="form-control" for="opJS">Operation: </label>
+      <select name="operation" id="opJS">
+        <option value="+">+</option>
+        <option value="-">-</option>
+        <option value="*">*</option>
+        <option value="/">/</option>
+      </select><br><br>
+
+      <label for="num2">Second Number: </label>
+      <input type="text" name="number2" id="num2JS" required /><br><br>
+
+      <label for="result">=</label>
+      <label id="resultInput"></label><br><br>
+      <input type="submit" value="Calculate">
+    </form>
+
+  </body>
+</html>
