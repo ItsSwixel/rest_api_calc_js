@@ -42,6 +42,11 @@ def verify_token(token):
                 else:
                     return True
 
+@flask_app.after_request
+def apply_caching(response):
+    response.headers["X-Frame-Options"] = "SAMEORIGIN"
+    response.headers['X-Content-Type-Options'] = "nosniff"
+    return response
 
 @flask_app.route('/calc')
 def calc_page():
@@ -124,7 +129,7 @@ def authenticate_users():
                                (user_token, username, password,))
                 conn.commit()
                 resp = make_response(redirect('/calc'))
-                resp.set_cookie('token', user_token, max_age=60*60*24*2)
+                resp.set_cookie('token', user_token, max_age=60*60*24*2, httponly=True, secure=True, samesite='Strict')
                 return resp
             else:
                 new_user = False
@@ -133,7 +138,7 @@ def authenticate_users():
                                (user_token, username, password,))
                 conn.commit()
                 resp = make_response(redirect('/calc'))
-                resp.set_cookie('token', user_token, max_age=60*60*24*2)
+                resp.set_cookie('token', user_token, max_age=60*60*24*2, httponly=True, secure=True, samesite='Strict')
                 return resp
 
 @flask_app.route('/logout')
@@ -141,8 +146,10 @@ def logout():
     if 'token' in request.cookies:
         value = request.cookies.get('token')
         resp = make_response(redirect('/'))
-        resp.set_cookie('token', value, max_age=0)
+        resp.set_cookie('token', value, max_age=0, secure=True)
         return resp
+    else:
+        return redirect('/')
 
 @flask_app.route('/index')
 def temp_index():
@@ -164,4 +171,4 @@ def calculate2_post():
 
 if __name__ == '__main__':
     print("This is a REST API Calculator")
-    flask_app.run(debug=True, ssl_context=('certs/cert.pem', 'certs/key.pem'), host='0.0.0.0')
+    flask_app.run(ssl_context=('certs/cert.pem', 'certs/key.pem'), host='0.0.0.0')
