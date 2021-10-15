@@ -49,7 +49,6 @@ def calc_page():
     isUserLoggedIn = False
     if 'token' in request.cookies:
         isUserLoggedIn = verify_token(request.cookies['token'])
-        new_user = False
     if isUserLoggedIn:
         decoded_token = jwt.decode(request.cookies['token'], SECRET_KEY, "HS256")
         username = decoded_token['username']
@@ -125,7 +124,7 @@ def authenticate_users():
                                (user_token, username, password,))
                 conn.commit()
                 resp = make_response(redirect('/calc'))
-                resp.set_cookie('token', user_token)
+                resp.set_cookie('token', user_token, max_age=60*60*24*2)
                 return resp
             else:
                 new_user = False
@@ -134,8 +133,16 @@ def authenticate_users():
                                (user_token, username, password,))
                 conn.commit()
                 resp = make_response(redirect('/calc'))
-                resp.set_cookie('token', user_token)
+                resp.set_cookie('token', user_token, max_age=60*60*24*2)
                 return resp
+
+@flask_app.route('/logout')
+def logout():
+    if 'token' in request.cookies:
+        value = request.cookies.get('token')
+        resp = make_response(redirect('/'))
+        resp.set_cookie('token', value, max_age=0)
+        return resp
 
 @flask_app.route('/index')
 def temp_index():
