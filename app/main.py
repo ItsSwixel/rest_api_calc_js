@@ -18,12 +18,12 @@ def add_database(data):
             cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
             equation = str(data[0]) + " " + data[1] + " " + str(data[2])
             result = data[3]
-            cursor.execute(f"INSERT INTO calculations (equation, result) VALUES (?, ?);", (str(equation), result,))
+            cursor.execute("INSERT INTO calculations (equation, result) VALUES (?, ?);", (str(equation), result,))
             connection.commit()
 
 
 def create_token(username):
-    validity = datetime.datetime.utcnow() + datetime.timedelta(days=15)
+    validity = datetime.datetime.utcnow() + datetime.timedelta(days=2)
     token = jwt.encode({'username': username, 'expiry': str(validity)}, SECRET_KEY, "HS256")
     return token
 
