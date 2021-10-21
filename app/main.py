@@ -122,7 +122,7 @@ def authenticate_users():
             rows = cursor.fetchall()
             if len(rows) == 0:
                 new_user = True
-                cursor.execute(f"INSERT INTO users (username, password) VALUES (?, ?);", (username, password))
+                cursor.execute("INSERT INTO users (username, password) VALUES (?, ?);", (username, password))
                 conn.commit()
                 user_token = create_token(username)
                 cursor.execute("UPDATE users SET token = ? WHERE username = ? AND password = ?;",
