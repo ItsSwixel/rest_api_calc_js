@@ -18,7 +18,7 @@ def add_database(data):
             cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
             equation = str(data[0]) + " " + data[1] + " " + str(data[2])
             result = data[3]
-            cursor.execute(f"INSERT INTO calculations (equation, result) VALUES ('{equation}', {result});")
+            cursor.execute(f"INSERT INTO calculations (equation, result) VALUES (?, ?);", (str(equation), result,))
             connection.commit()
 
 

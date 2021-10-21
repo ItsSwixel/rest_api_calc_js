@@ -1,6 +1,11 @@
 $(function() {
   $('#calcForm').submit(function(e) {
     var action = "/calculate2"
+    var x = Number(document.forms['calcForm']['number1'].value);
+    var y = Number(document.forms['calcForm']['number2'].value);
+    if (isNaN(x) || isNaN(y)) {
+      alert('Please only enter numbers')
+    } else {
     $.ajax({
       type: 'POST',
       url: action,
@@ -22,7 +27,7 @@ $(function() {
 
       }
     });
-
     e.preventDefault();
+  }
   });
 });
