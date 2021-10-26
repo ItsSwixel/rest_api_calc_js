@@ -54,6 +54,6 @@
         state: started
         container_default_behavior: compatibility
         ports:
-          - "443:5000"
+          - "5000:5000"
         volumes:
           - /home/ubuntu/certs:/certs

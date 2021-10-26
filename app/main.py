@@ -90,6 +90,7 @@ def calculator():
 
 @flask_app.route('/')
 def splash_page():
+    print(request.headers)
     return render_template('splash_page.html')
 
 
