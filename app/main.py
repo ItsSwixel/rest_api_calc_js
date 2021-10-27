@@ -12,6 +12,9 @@ SECRET_KEY = config('KEY')
 flask_app = Flask(__name__)
 
 
+# @component CalcApp:Web:Server:DBMS (#db)
+# @connects #web_server to #db with SQL Request
+# @connects #web_server2 to #db with SQL Request
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -47,6 +50,7 @@ def apply_caching(response):
     response.headers["X-Frame-Options"] = "SAMEORIGIN"
     response.headers['X-Content-Type-Options'] = "nosniff"
     return response
+
 
 @flask_app.route('/calc')
 def calc_page():
@@ -88,6 +92,7 @@ def calculator():
                            mult=f"Multiplication: {mul}", divi=f"Division: {div}")"""
 
 
+# @component External:Guest (#guest)
 @flask_app.route('/')
 def splash_page():
     print(request.headers)
@@ -142,6 +147,7 @@ def authenticate_users():
                 resp.set_cookie('token', user_token, max_age=60*60*24*2, httponly=True, secure=True, samesite='Strict')
                 return resp
 
+
 @flask_app.route('/logout')
 def logout():
     if 'token' in request.cookies:
@@ -152,9 +158,6 @@ def logout():
     else:
         return redirect('/')
 
-@flask_app.route('/index')
-def temp_index():
-    return render_template('index.html')
 
 @flask_app.route('/calculate2', methods=['POST'])
 def calculate2_post():
@@ -169,6 +172,7 @@ def calculate2_post():
         'data': answer
     }
     return make_response(jsonify(response_data))
+
 
 if __name__ == '__main__':
     print("This is a REST API Calculator")

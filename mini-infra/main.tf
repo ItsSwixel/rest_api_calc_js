@@ -13,6 +13,7 @@ terraform {
 }
 
 # VPC
+# @component CalcApp:VPC (#vpc)
 resource "aws_vpc" "cyber94_full_lcooper_vpc_tf" {
     cidr_block = "10.110.0.0/16"
 
@@ -22,6 +23,7 @@ resource "aws_vpc" "cyber94_full_lcooper_vpc_tf" {
 }
 
 # Internet gateway
+# @component CalcApp:VPC:InternetGateway (#ig)
 resource "aws_internet_gateway" "cyber94_full_lcooper_IG_tf" {
   vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
   tags = {
@@ -30,6 +32,8 @@ resource "aws_internet_gateway" "cyber94_full_lcooper_IG_tf" {
 }
 
 # Subnets
+# @component CalcApp:VPC:Subnet (#subnet)
+# @connects #vpc to #subnet with Network
 resource "aws_subnet" "cyber94_full_lcooper_subnet_app_tf" {
     vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
     cidr_block = "10.110.1.0/24"
@@ -61,6 +65,10 @@ resource "aws_route_table_association" "cyber94_full_lcooper_app-association_tf"
 
 
 # Security Groups
+# @component CalcApp:VPC:SG:App (#sg_app)
+# @connects #nacl_app to #sg_app with Network
+# @connects #sg_app to #web_server with Network
+# @connects #sg_app to #web_server2 with Network
 resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
     name = "cyber94_full_lcooper_sg_app"
     vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
@@ -98,7 +106,8 @@ resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
     }
 }
 
-
+# @component CalcApp:VPC:SG:Proxy (#sg_proxy)
+# @connects #nacl_app to #sg_proxy with Network
 resource "aws_security_group" "cyber94_full_lcooper_sg_proxy_tf" {
     name = "cyber94_full_lcooper_sg_proxy"
     vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
@@ -151,6 +160,8 @@ resource "aws_security_group" "cyber94_full_lcooper_sg_proxy_tf" {
 }
 
 # NACLs
+# @component CalcApp:VPC:Subnet:NACL (#nacl_app)
+# @connects #subnet to #nacl_app with Network
 resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
   vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
   subnet_ids = [aws_subnet.cyber94_full_lcooper_subnet_app_tf.id]
@@ -225,6 +236,8 @@ resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
 
 
 # Instances
+# @component CalcApp:Web:Server:App (#web_server)
+# @component CalcApp:Web:Server:App2 (#web_server2)
 resource "aws_instance" "cyber94_full_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
@@ -258,7 +271,7 @@ resource "aws_instance" "cyber94_full_lcooper_app_tf" {
   provisioner "local-exec" {
     working_dir = "../ansible"
     command = "ansible-playbook -i ${self.public_ip}, -u ubuntu app-playbook.yaml"
-  }
+  }subnet
 
 /*
   connection {
@@ -281,6 +294,7 @@ resource "aws_instance" "cyber94_full_lcooper_app_tf" {
   }*/
 }
 
+# @component CalcApp:Web:Server:Proxy (#proxy)
 resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
