@@ -14,53 +14,53 @@ terraform {
 
 # VPC
 # @component CalcApp:VPC (#vpc)
-resource "aws_vpc" "cyber94_full_lcooper_vpc_tf" {
+resource "aws_vpc" "cyber94_mini_lcooper_vpc_tf" {
     cidr_block = "10.110.0.0/16"
 
     tags = {
-      Name = "cyber94_full_lcooper_vpc"
+      Name = "cyber94_mini_lcooper_vpc"
     }
 }
 
 # Internet gateway
 # @component CalcApp:VPC:InternetGateway (#ig)
-resource "aws_internet_gateway" "cyber94_full_lcooper_IG_tf" {
-  vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_internet_gateway" "cyber94_mini_lcooper_IG_tf" {
+  vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
   tags = {
-    Name = "cyber94_full_lcooper_IG"
+    Name = "cyber94_mini_lcooper_IG"
   }
 }
 
 # Subnets
 # @component CalcApp:VPC:Subnet (#subnet)
 # @connects #vpc to #subnet with Network
-resource "aws_subnet" "cyber94_full_lcooper_subnet_app_tf" {
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_subnet" "cyber94_mini_lcooper_subnet_app_tf" {
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
     cidr_block = "10.110.1.0/24"
 
     tags = {
-      Name = "cyber94_full_lcooper_subnet_app"
+      Name = "cyber94_mini_lcooper_subnet_app"
     }
 }
 
 # Routing
-resource "aws_route_table" "cyber94_full_lcooper_routing_tf" {
-  vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_route_table" "cyber94_mini_lcooper_routing_tf" {
+  vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
 
   tags = {
-    Name = "cyber94_full_lcooper_routing"
+    Name = "cyber94_mini_lcooper_routing"
   }
 }
 
-resource "aws_route" "cyber95_full_lcooper_internet_route_tf" {
-    route_table_id = aws_route_table.cyber94_full_lcooper_routing_tf.id
+resource "aws_route" "cyber95_mini_lcooper_internet_route_tf" {
+    route_table_id = aws_route_table.cyber94_mini_lcooper_routing_tf.id
     destination_cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.cyber94_full_lcooper_IG_tf.id
+    gateway_id = aws_internet_gateway.cyber94_mini_lcooper_IG_tf.id
 }
 
-resource "aws_route_table_association" "cyber94_full_lcooper_app-association_tf" {
-    subnet_id = aws_subnet.cyber94_full_lcooper_subnet_app_tf.id
-    route_table_id = aws_route_table.cyber94_full_lcooper_routing_tf.id
+resource "aws_route_table_association" "cyber94_mini_lcooper_app-association_tf" {
+    subnet_id = aws_subnet.cyber94_mini_lcooper_subnet_app_tf.id
+    route_table_id = aws_route_table.cyber94_mini_lcooper_routing_tf.id
 }
 
 
@@ -68,9 +68,9 @@ resource "aws_route_table_association" "cyber94_full_lcooper_app-association_tf"
 # @component CalcApp:VPC:SG:App (#sg_app)
 # @connects #nacl_app to #sg_app with Network
 
-resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
-    name = "cyber94_full_lcooper_sg_app"
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_security_group" "cyber94_mini_lcooper_sg_app_tf" {
+    name = "cyber94_mini_lcooper_sg_app"
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
 
     ingress {
       from_port = 443
@@ -101,15 +101,15 @@ resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
     }
 
     tags = {
-      Name = "cyber94_full_lcooper_sg_app"
+      Name = "cyber94_mini_lcooper_sg_app"
     }
 }
 
 # @component CalcApp:VPC:SG:Proxy (#sg_proxy)
 # @connects #nacl_app to #sg_proxy with Network
-resource "aws_security_group" "cyber94_full_lcooper_sg_proxy_tf" {
-    name = "cyber94_full_lcooper_sg_proxy"
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_security_group" "cyber94_mini_lcooper_sg_proxy_tf" {
+    name = "cyber94_mini_lcooper_sg_proxy"
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
 
     ingress {
       from_port = 80
@@ -154,16 +154,16 @@ resource "aws_security_group" "cyber94_full_lcooper_sg_proxy_tf" {
     }
 
     tags = {
-      Name = "cyber94_full_lcooper_sg_proxy"
+      Name = "cyber94_mini_lcooper_sg_proxy"
     }
 }
 
 # NACLs
 # @component CalcApp:VPC:Subnet:NACL (#nacl_app)
 # @connects #subnet to #nacl_app with Network
-resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
-  vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
-  subnet_ids = [aws_subnet.cyber94_full_lcooper_subnet_app_tf.id]
+resource "aws_network_acl" "cyber94_mini_lcooper_nacl_app_tf" {
+  vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
+  subnet_ids = [aws_subnet.cyber94_mini_lcooper_subnet_app_tf.id]
 
   ingress {
     rule_no = 100
@@ -229,7 +229,7 @@ resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
   }
 
   tags = {
-    Name = "cyber94_full_lcooper_nacl_app"
+    Name = "cyber94_mini_lcooper_nacl_app"
   }
 }
 
@@ -243,16 +243,21 @@ resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
 # @connects #web_server2 to #sg_app with HTTPS/Get-Response
 # @connects #proxy to #sg_app with HTTPS/GET-Request
 # @connects #sg_app to #proxy with HTTPS/GET-Response
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+# @threat SQL Injection (#sqli)
+# @exposes #web_server to #sqli with not validating inputs
+# @control Input Validation (#iv)
+# @mitigates #web_server against #sqli with #iv
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
-  subnet_id = aws_subnet.cyber94_full_lcooper_subnet_app_tf.id
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+  subnet_id = aws_subnet.cyber94_mini_lcooper_subnet_app_tf.id
   associate_public_ip_address = true
+  key_name = "cyber94-lcooper"
 
   tags = {
-    Name = "cyber94_full_lcooper_app"
+    Name = "cyber94_mini_lcooper_app"
   }
 
   lifecycle {
@@ -305,15 +310,15 @@ resource "aws_instance" "cyber94_full_lcooper_app_tf" {
 # @connects #sg_proxy to #proxy with HTTPS/GET-Request
 # @connects #proxy to #sg_proxy with HTTPS/GET-Response
 
-resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
+resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
   key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_proxy_tf.id]
-  subnet_id = aws_subnet.cyber94_full_lcooper_subnet_app_tf.id
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_proxy_tf.id]
+  subnet_id = aws_subnet.cyber94_mini_lcooper_subnet_app_tf.id
   associate_public_ip_address = true
 
   tags = {
-    Name = "cyber94_full_lcooper_proxy"
+    Name = "cyber94_mini_lcooper_proxy"
   }
 }

@@ -17,6 +17,10 @@ flask_app = Flask(__name__)
 # @connects #db to #web_server with SQL Response
 # @connects #web_server2 to #db with SQL Request
 # @connects #db to #web_server2 with SQL Response
+# @threat Stealing User Information (#sui)
+# @exposes #db to #sui with incorrect permissions
+# @exposes #db to #sqli with not validating inputs
+# @mitigates #db against #sqli with #iv
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:

@@ -10,6 +10,48 @@ A threatspec project.
 
 # Exposures
 
+## Stealing user information against CalcApp:Web:Server:DBMS
+Incorrect permissions
+
+```
+# @exposes #db to #sui with incorrect permissions
+def add_database(data):
+    with closing(sqlite3.connect("data.db")) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
+            equation = str(data[0]) + " " + data[1] + " " + str(data[2])
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## Sql injection against CalcApp:Web:Server:DBMS
+Not validating inputs
+
+```
+# @exposes #db to #sqli with not validating inputs
+def add_database(data):
+    with closing(sqlite3.connect("data.db")) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
+            equation = str(data[0]) + " " + data[1] + " " + str(data[2])
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## Sql injection against CalcApp:Web:Server:App
+Not validating inputs
+
+```
+# @exposes #web_server to #sqli with not validating inputs
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
 
 # Acceptances
 
@@ -18,6 +60,34 @@ A threatspec project.
 
 
 # Mitigations
+
+## Sql injection against CalcApp:Web:Server:DBMS mitigated by Input validation
+
+
+```
+# @mitigates #db against #sqli with #iv
+def add_database(data):
+    with closing(sqlite3.connect("data.db")) as connection:
+        with closing(connection.cursor()) as cursor:
+            cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
+            equation = str(data[0]) + " " + data[1] + " " + str(data[2])
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## Sql injection against CalcApp:Web:Server:App mitigated by Input validation
+
+
+```
+# @mitigates #web_server against #sqli with #iv
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+  instance_type = "t2.micro"
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
 
 
 # Reviews
@@ -128,8 +198,8 @@ Network
 
 ```
 # @connects #vpc to #subnet with Network
-resource "aws_subnet" "cyber94_full_lcooper_subnet_app_tf" {
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_subnet" "cyber94_mini_lcooper_subnet_app_tf" {
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
     cidr_block = "10.110.1.0/24"
 
     tags = {
@@ -143,9 +213,9 @@ Network
 ```
 # @connects #nacl_app to #sg_app with Network
 
-resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
-    name = "cyber94_full_lcooper_sg_app"
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_security_group" "cyber94_mini_lcooper_sg_app_tf" {
+    name = "cyber94_mini_lcooper_sg_app"
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
 
 
 ```
@@ -156,9 +226,9 @@ Network
 
 ```
 # @connects #nacl_app to #sg_proxy with Network
-resource "aws_security_group" "cyber94_full_lcooper_sg_proxy_tf" {
-    name = "cyber94_full_lcooper_sg_proxy"
-    vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
+resource "aws_security_group" "cyber94_mini_lcooper_sg_proxy_tf" {
+    name = "cyber94_mini_lcooper_sg_proxy"
+    vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
 
     ingress {
 
@@ -170,9 +240,9 @@ Network
 
 ```
 # @connects #subnet to #nacl_app with Network
-resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
-  vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
-  subnet_ids = [aws_subnet.cyber94_full_lcooper_subnet_app_tf.id]
+resource "aws_network_acl" "cyber94_mini_lcooper_nacl_app_tf" {
+  vpc_id = aws_vpc.cyber94_mini_lcooper_vpc_tf.id
+  subnet_ids = [aws_subnet.cyber94_mini_lcooper_subnet_app_tf.id]
 
   ingress {
 
@@ -184,11 +254,11 @@ HTTPS/Get-Request
 
 ```
 # @connects #sg_app to #web_server with HTTPS/Get-Request
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -198,11 +268,11 @@ HTTPS/Get-Response
 
 ```
 # @connects #web_server to #sg_app with HTTPS/Get-Response
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -212,11 +282,11 @@ HTTPS/Get-Request
 
 ```
 # @connects #sg_app to #web_server2 with HTTPS/Get-Request
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -226,11 +296,11 @@ HTTPS/Get-Response
 
 ```
 # @connects #web_server2 to #sg_app with HTTPS/Get-Response
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -240,11 +310,11 @@ HTTPS/GET-Request
 
 ```
 # @connects #proxy to #sg_app with HTTPS/GET-Request
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -254,11 +324,11 @@ HTTPS/GET-Response
 
 ```
 # @connects #sg_app to #proxy with HTTPS/GET-Response
-resource "aws_instance" "cyber94_full_lcooper_app_tf" {
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-  key_name = "cyber94-lcooper"
-  vpc_security_group_ids = [aws_security_group.cyber94_full_lcooper_sg_app_tf.id]
+  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -269,7 +339,7 @@ HTTPS/GET-Request
 ```
 # @connects #guest to #sg_proxy with HTTPS/GET-Request
 
-resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
+resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
   key_name = "cyber94-lcooper"
@@ -283,7 +353,7 @@ HTTPS/GET-Response
 ```
 # @connects #sg_proxy to #guest with HTTPS/GET-Response
 
-resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
+resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
   key_name = "cyber94-lcooper"
@@ -297,7 +367,7 @@ HTTPS/GET-Request
 ```
 # @connects #sg_proxy to #proxy with HTTPS/GET-Request
 
-resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
+resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
   key_name = "cyber94-lcooper"
@@ -311,7 +381,7 @@ HTTPS/GET-Response
 ```
 # @connects #proxy to #sg_proxy with HTTPS/GET-Response
 
-resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
+resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
   key_name = "cyber94-lcooper"
@@ -322,9 +392,9 @@ resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
 
 # Components
 
-## CalcApp:Web:Server:App
-
 ## CalcApp:Web:Server:DBMS
+
+## CalcApp:Web:Server:App
 
 ## CalcApp:Web:Server:App2
 
@@ -347,5 +417,13 @@ resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
 
 # Threats
 
+## Sql injection
+
+
+## Stealing user information
+
+
 
 # Controls
+
+## Input validation
