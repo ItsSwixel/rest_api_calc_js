@@ -136,5 +136,4 @@ dmypy.json
 data.db
 /threatmodel
 threatspec.yaml
-ThreatModel.*
 temp*
