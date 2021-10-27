@@ -5,9 +5,11 @@ resource "aws_instance" "cyber94_mod_lcooper_webserver_tf" {
   key_name = var.var_ssh_key_name
   subnet_id = var.var_web_subnet_id
   associate_public_ip_address = true
+  count = 2
 
+  user_data = templatefile("../init-scripts/docker-install.sh", {SPECIAL_ARG="This is an argument from terraform"})
   tags = {
-    Name = "cyber94_mod_lcooper_webserver"
+    Name = "cyber94_mod_lcooper_webserver_${count.index}"
   }
 }
 
@@ -16,7 +18,7 @@ resource "aws_route53_record" "cyber94_mod_lcooper_webserver_dns_tf" {
   name = "www"
   type = "A"
   ttl = "30"
-  records = [aws_instance.cyber94_mod_lcooper_webserver_tf.public_ip]
+  records = aws_instance.cyber94_mod_lcooper_webserver_tf.*.public_ip
 }
 
 resource "aws_security_group" "cyber94_mod_lcooper_sg_webserver_tf" {

@@ -24,6 +24,16 @@ resource "aws_s3_bucket" "cyber94_calc_lcooper_s3_bucket_tf" {
     }
   }
 
+resource "aws_dynamodb_table" "cyber94_mod_lcooper_dynamodb_table_lock_tf" {
+    name = "cyber94_mod_lcooper_dynamodb_table_lock"
+    billing_mode = "PAY_PER_REQUEST"
+    hash_key = "LockID"
+    attribute {
+      name = "LockID"
+      type = "S"
+    }
+}
+
 resource "aws_dynamodb_table" "cyber94_calc_lcooper_dynamodb_table_lock_tf" {
     name = "cyber94_calc_lcooper_dynamodb_table_lock"
     billing_mode = "PAY_PER_REQUEST"
