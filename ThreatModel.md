@@ -44,6 +44,48 @@ Not validating inputs
 ```
 # @exposes #web_server to #sqli with not validating inputs
 
+
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Cross-site scripting against CalcApp:Web:Server:App
+Embedding input data into the html or javascript
+
+```
+# @exposes #web_server to #xss with embedding input data into the HTML or JavaScript
+
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Sql injection against CalcApp:Web:Server:App2
+Not validating inputs
+
+```
+# @exposes #web_server2 to #sqli with not validating inputs
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+  instance_type = "t2.micro"
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Cross-site scripting against CalcApp:Web:Server:App2
+Embedding input data into the html or javascript
+
+```
+# @exposes #web_server2 to #xss with embedding input data into the HTML or JavaScript
+
 resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
@@ -80,6 +122,48 @@ def add_database(data):
 
 ```
 # @mitigates #web_server against #sqli with #iv
+
+
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Cross-site scripting against CalcApp:Web:Server:App mitigated by Input validation
+
+
+```
+# @mitigates #web_server against #xss with #iv
+
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Sql injection against CalcApp:Web:Server:App2 mitigated by Input validation
+
+
+```
+# @mitigates #web_server2 against #sqli with #iv
+
+
+resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
+  ami = "ami-0943382e114f188e8"
+  instance_type = "t2.micro"
+
+```
+/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
+
+## Cross-site scripting against CalcApp:Web:Server:App2 mitigated by Input validation
+
+
+```
+# @mitigates #web_server2 against #xss with #iv
 
 resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
@@ -255,10 +339,10 @@ HTTPS/Get-Request
 ```
 # @connects #sg_app to #web_server with HTTPS/Get-Request
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -269,10 +353,10 @@ HTTPS/Get-Response
 ```
 # @connects #web_server to #sg_app with HTTPS/Get-Response
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -283,10 +367,10 @@ HTTPS/Get-Request
 ```
 # @connects #sg_app to #web_server2 with HTTPS/Get-Request
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -297,10 +381,10 @@ HTTPS/Get-Response
 ```
 # @connects #web_server2 to #sg_app with HTTPS/Get-Response
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -311,10 +395,10 @@ HTTPS/GET-Request
 ```
 # @connects #proxy to #sg_app with HTTPS/GET-Request
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -325,10 +409,10 @@ HTTPS/GET-Response
 ```
 # @connects #sg_app to #proxy with HTTPS/GET-Response
 
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
+
+
+
+
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -418,6 +502,9 @@ resource "aws_instance" "cyber94_mini_lcooper_proxy_tf" {
 # Threats
 
 ## Sql injection
+
+
+## Cross-site scripting
 
 
 ## Stealing user information
