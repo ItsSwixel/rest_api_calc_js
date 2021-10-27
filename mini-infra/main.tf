@@ -67,8 +67,7 @@ resource "aws_route_table_association" "cyber94_full_lcooper_app-association_tf"
 # Security Groups
 # @component CalcApp:VPC:SG:App (#sg_app)
 # @connects #nacl_app to #sg_app with Network
-# @connects #sg_app to #web_server with Network
-# @connects #sg_app to #web_server2 with Network
+
 resource "aws_security_group" "cyber94_full_lcooper_sg_app_tf" {
     name = "cyber94_full_lcooper_sg_app"
     vpc_id = aws_vpc.cyber94_full_lcooper_vpc_tf.id
@@ -238,6 +237,12 @@ resource "aws_network_acl" "cyber94_full_lcooper_nacl_app_tf" {
 # Instances
 # @component CalcApp:Web:Server:App (#web_server)
 # @component CalcApp:Web:Server:App2 (#web_server2)
+# @connects #sg_app to #web_server with HTTPS/Get-Request
+# @connects #web_server to #sg_app with HTTPS/Get-Response
+# @connects #sg_app to #web_server2 with HTTPS/Get-Request
+# @connects #web_server2 to #sg_app with HTTPS/Get-Response
+# @connects #proxy to #sg_app with HTTPS/GET-Request
+# @connects #sg_app to #proxy with HTTPS/GET-Response
 resource "aws_instance" "cyber94_full_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
@@ -295,6 +300,11 @@ resource "aws_instance" "cyber94_full_lcooper_app_tf" {
 }
 
 # @component CalcApp:Web:Server:Proxy (#proxy)
+# @connects #guest to #sg_proxy with HTTPS/GET-Request
+# @connects #sg_proxy to #guest with HTTPS/GET-Response
+# @connects #sg_proxy to #proxy with HTTPS/GET-Request
+# @connects #proxy to #sg_proxy with HTTPS/GET-Response
+
 resource "aws_instance" "cyber94_full_lcooper_proxy_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"

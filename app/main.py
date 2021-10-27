@@ -14,7 +14,9 @@ flask_app = Flask(__name__)
 
 # @component CalcApp:Web:Server:DBMS (#db)
 # @connects #web_server to #db with SQL Request
+# @connects #db to #web_server with SQL Response
 # @connects #web_server2 to #db with SQL Request
+# @connects #db to #web_server2 with SQL Response
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -93,6 +95,11 @@ def calculator():
 
 
 # @component External:Guest (#guest)
+# @component External:SSH (#ssh)
+# @connects #ssh to #proxy with SSH
+# @connects #ssh to #web_server with SSH
+# @connects #ssh to #web_server2 with SSH
+
 @flask_app.route('/')
 def splash_page():
     print(request.headers)
