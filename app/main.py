@@ -58,6 +58,8 @@ def apply_caching(response):
     return response
 
 
+# @component CalcApp:Web:Server:Calc Page (#calcpage)
+
 @flask_app.route('/calc')
 def calc_page():
     global new_user
@@ -76,6 +78,9 @@ def calc_page():
         return redirect("/")
 
 
+# @component CalcApp:Web:Server:PyCalc (#pycalc)
+# @connects #proxy to #pycalc with HTTPS/POST-Request
+# @connects #pycalc to #proxy with HTTPS/POST-Response
 @flask_app.route('/calculate', methods=['POST'])
 def calculator():
     if request.form['number1'].isdigit() and request.form['number2'].isdigit():
@@ -98,18 +103,26 @@ def calculator():
                            mult=f"Multiplication: {mul}", divi=f"Division: {div}")"""
 
 
-# @component External:Guest (#guest)
-# @component External:SSH (#ssh)
+# @component External:User (#user)
+# @connects #user to #proxy with HTTPS/GET-Request
+# @connects #proxy to #user with HTTPS/GET-Response
+# @component External:Developer SSH (#ssh)
 # @connects #ssh to #proxy with SSH
 # @connects #ssh to #web_server with SSH
 # @connects #ssh to #web_server2 with SSH
 
+# @component CalcApp:Web:Server:Splash Page (#splash)
+# @connects #proxy to #splash with HTTPS/GET-Request
+# @connects #splash to #proxy with HTTPS/GET-Response
 @flask_app.route('/')
 def splash_page():
     print(request.headers)
     return render_template('splash_page.html')
 
 
+# @component CalcApp:Web:Server:Login (#login)
+# @connects #proxy to #login with HTTPS/GET-Request
+# @connects #login to #proxy with HTTPS/GET-Response
 @flask_app.route('/login')
 def login_page():
     global new_user
@@ -123,6 +136,9 @@ def login_page():
         return render_template('login.html')
 
 
+# @component CalcApp:Web:Server:Authenticate (#auth)
+# @connects #proxy to #auth with HTTPS/POST-Request
+# @connects #auth to #proxy with HTTPS/POST-Response
 @flask_app.route('/authenticate', methods=['POST'])
 def authenticate_users():
     global new_user
@@ -159,6 +175,9 @@ def authenticate_users():
                 return resp
 
 
+# @component CalcApp:Web:Server:Logout (#logout)
+# @connects #proxy to #logout with HTTPS/GET-Request
+# @connects #logout to #proxy with HTTPS/GET-Response
 @flask_app.route('/logout')
 def logout():
     if 'token' in request.cookies:
@@ -170,6 +189,9 @@ def logout():
         return redirect('/')
 
 
+# @component CalcApp:Web:Server:JsCalc (#jscalc)
+# @connects #proxy to #jscalc with HTTPS/GET-Request
+# @connects #jscalc to #proxy with HTTPS/GET-Response
 @flask_app.route('/calculate2', methods=['POST'])
 def calculate2_post():
     if request.form['number1'].isdigit() and request.form['number2'].isdigit():
