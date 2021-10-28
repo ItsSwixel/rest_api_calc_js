@@ -13,10 +13,10 @@ flask_app = Flask(__name__)
 
 
 # @component CalcApp:Web:Server:DBMS (#db)
-# @connects #web_server to #db with SQL Request
-# @connects #db to #web_server with SQL Response
-# @connects #web_server2 to #db with SQL Request
-# @connects #db to #web_server2 with SQL Response
+# @connects #login to #db with SQL Request
+# @connects #db to #login with SQL Response
+# @connects #auth to #db with SQL Request
+# @connects #db to #auth with SQL Response
 # @threat Stealing User Information (#sui)
 # @exposes #db to #sui with incorrect permissions
 # @exposes #db to #sqli with not validating inputs
@@ -59,7 +59,8 @@ def apply_caching(response):
 
 
 # @component CalcApp:Web:Server:Calc Page (#calcpage)
-
+# @connects #calcpage to #db with SQL Request
+# @connects #db to #calcpage with SQL Response
 @flask_app.route('/calc')
 def calc_page():
     global new_user
@@ -106,6 +107,11 @@ def calculator():
 # @component External:User (#user)
 # @connects #user to #proxy with HTTPS/GET-Request
 # @connects #proxy to #user with HTTPS/GET-Response
+
+# @component External:Guest (#guest)
+# @connects #guest to #proxy with HTTPS/GET-Request
+# @connects #proxy to #guest with HTTPS/GET-Reponse
+
 # @component External:Developer SSH (#ssh)
 # @connects #ssh to #proxy with SSH
 # @connects #ssh to #web_server with SSH

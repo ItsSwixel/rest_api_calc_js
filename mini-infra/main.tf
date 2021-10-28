@@ -240,14 +240,12 @@ resource "aws_network_acl" "cyber94_mini_lcooper_nacl_app_tf" {
 # @mitigates #web_server against #sqli with #iv
 
 # @threat Cross-site Scripting (#xss)
-# @exposes #web_server to #xss with embedding input data into the HTML or JavaScript
-# @mitigates #web_server against #xss with #iv
+# @exposes #user to #xss with embedding input data into the HTML or JavaScript
+# @mitigates #user against #xss with #iv
 
 # @exposes #web_server2 to #sqli with not validating inputs
 # @mitigates #web_server2 against #sqli with #iv
 
-# @exposes #web_server2 to #xss with embedding input data into the HTML or JavaScript
-# @mitigates #web_server2 against #xss with #iv
 
 resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"

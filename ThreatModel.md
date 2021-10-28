@@ -52,11 +52,11 @@ resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
 
-## Cross-site scripting against CalcApp:Web:Server:App
+## Cross-site scripting against External:User
 Embedding input data into the html or javascript
 
 ```
-# @exposes #web_server to #xss with embedding input data into the HTML or JavaScript
+# @exposes #user to #xss with embedding input data into the HTML or JavaScript
 
 
 
@@ -76,20 +76,6 @@ Not validating inputs
 resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
   ami = "ami-0943382e114f188e8"
   instance_type = "t2.micro"
-
-```
-/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
-
-## Cross-site scripting against CalcApp:Web:Server:App2
-Embedding input data into the html or javascript
-
-```
-# @exposes #web_server2 to #xss with embedding input data into the HTML or JavaScript
-
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
 
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
@@ -131,11 +117,11 @@ resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
 
-## Cross-site scripting against CalcApp:Web:Server:App mitigated by Input validation
+## Cross-site scripting against External:User mitigated by Input validation
 
 
 ```
-# @mitigates #web_server against #xss with #iv
+# @mitigates #user against #xss with #iv
 
 
 
@@ -159,31 +145,17 @@ resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
 ```
 /home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
 
-## Cross-site scripting against CalcApp:Web:Server:App2 mitigated by Input validation
-
-
-```
-# @mitigates #web_server2 against #xss with #iv
-
-resource "aws_instance" "cyber94_mini_lcooper_app_tf" {
-  ami = "ami-0943382e114f188e8"
-  instance_type = "t2.micro"
-  vpc_security_group_ids = [aws_security_group.cyber94_mini_lcooper_sg_app_tf.id]
-
-```
-/home/kali/Documents/rest_api_calc_js/mini-infra/main.tf:1
-
 
 # Reviews
 
 
 # Connections
 
-## CalcApp:Web:Server:App To CalcApp:Web:Server:DBMS
+## CalcApp:Web:Server:Login To CalcApp:Web:Server:DBMS
 SQL Request
 
 ```
-# @connects #web_server to #db with SQL Request
+# @connects #login to #db with SQL Request
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -193,11 +165,11 @@ def add_database(data):
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
-## CalcApp:Web:Server:DBMS To CalcApp:Web:Server:App
+## CalcApp:Web:Server:DBMS To CalcApp:Web:Server:Login
 SQL Response
 
 ```
-# @connects #db to #web_server with SQL Response
+# @connects #db to #login with SQL Response
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -207,11 +179,11 @@ def add_database(data):
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
-## CalcApp:Web:Server:App2 To CalcApp:Web:Server:DBMS
+## CalcApp:Web:Server:Authenticate To CalcApp:Web:Server:DBMS
 SQL Request
 
 ```
-# @connects #web_server2 to #db with SQL Request
+# @connects #auth to #db with SQL Request
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
@@ -221,16 +193,44 @@ def add_database(data):
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
-## CalcApp:Web:Server:DBMS To CalcApp:Web:Server:App2
+## CalcApp:Web:Server:DBMS To CalcApp:Web:Server:Authenticate
 SQL Response
 
 ```
-# @connects #db to #web_server2 with SQL Response
+# @connects #db to #auth with SQL Response
 def add_database(data):
     with closing(sqlite3.connect("data.db")) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute("CREATE TABLE IF NOT EXISTS calculations (id INTEGER PRIMARY KEY, equation TEXT, result TEXT);")
             equation = str(data[0]) + " " + data[1] + " " + str(data[2])
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## CalcApp:Web:Server:Calc Page To CalcApp:Web:Server:DBMS
+SQL Request
+
+```
+# @connects #calcpage to #db with SQL Request
+@flask_app.route('/calc')
+def calc_page():
+    global new_user
+    isUserLoggedIn = False
+    if 'token' in request.cookies:
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## CalcApp:Web:Server:DBMS To CalcApp:Web:Server:Calc Page
+SQL Response
+
+```
+# @connects #db to #calcpage with SQL Response
+@flask_app.route('/calc')
+def calc_page():
+    global new_user
+    isUserLoggedIn = False
+    if 'token' in request.cookies:
 
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
@@ -269,10 +269,10 @@ HTTPS/GET-Request
 ```
 # @connects #user to #proxy with HTTPS/GET-Request
 
+
+
 @flask_app.route('/')
 def splash_page():
-    print(request.headers)
-    return render_template('splash_page.html')
 
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
@@ -283,10 +283,38 @@ HTTPS/GET-Response
 ```
 # @connects #proxy to #user with HTTPS/GET-Response
 
+
+
+@flask_app.route('/')
+def splash_page():
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## External:Guest To CalcApp:Web:Server:Proxy
+HTTPS/GET-Request
+
+```
+# @connects #guest to #proxy with HTTPS/GET-Request
+
+
 @flask_app.route('/')
 def splash_page():
     print(request.headers)
-    return render_template('splash_page.html')
+
+```
+/home/kali/Documents/rest_api_calc_js/app/main.py:1
+
+## CalcApp:Web:Server:Proxy To External:Guest
+HTTPS/GET-Reponse
+
+```
+# @connects #proxy to #guest with HTTPS/GET-Reponse
+
+
+@flask_app.route('/')
+def splash_page():
+    print(request.headers)
 
 ```
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
@@ -645,21 +673,25 @@ HTTP/GET-Response
 
 ## CalcApp:Web:Server:App
 
+## External:User
+
 ## CalcApp:Web:Server:App2
+
+## CalcApp:Web:Server:Login
+
+## CalcApp:Web:Server:Authenticate
+
+## CalcApp:Web:Server:Calc Page
 
 ## CalcApp:Web:Server:Proxy
 
 ## CalcApp:Web:Server:PyCalc
 
-## External:User
+## External:Guest
 
 ## External:Developer SSH
 
 ## CalcApp:Web:Server:Splash Page
-
-## CalcApp:Web:Server:Login
-
-## CalcApp:Web:Server:Authenticate
 
 ## CalcApp:Web:Server:Logout
 
@@ -668,8 +700,6 @@ HTTP/GET-Response
 ## CalcApp:VPC
 
 ## CalcApp:VPC:Subnet
-
-## CalcApp:Web:Server:Calc Page
 
 ## External:Developer Browser
 
