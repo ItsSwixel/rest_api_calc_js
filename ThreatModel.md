@@ -264,10 +264,10 @@ def calculator():
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
 ## External:User To CalcApp:Web:Server:Proxy
-HTTPS/GET-Request
+HTTPS/GET-Request with Token
 
 ```
-# @connects #user to #proxy with HTTPS/GET-Request
+# @connects #user to #proxy with HTTPS/GET-Request with Token
 
 
 
@@ -278,10 +278,10 @@ def splash_page():
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
 ## CalcApp:Web:Server:Proxy To External:User
-HTTPS/GET-Response
+HTTPS/GET-Response with Token
 
 ```
-# @connects #proxy to #user with HTTPS/GET-Response
+# @connects #proxy to #user with HTTPS/GET-Response with Token
 
 
 
@@ -292,10 +292,10 @@ def splash_page():
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
 ## External:Guest To CalcApp:Web:Server:Proxy
-HTTPS/GET-Request
+HTTPS/GET-Request without Token
 
 ```
-# @connects #guest to #proxy with HTTPS/GET-Request
+# @connects #guest to #proxy with HTTPS/GET-Request without Token
 
 
 @flask_app.route('/')
@@ -306,10 +306,10 @@ def splash_page():
 /home/kali/Documents/rest_api_calc_js/app/main.py:1
 
 ## CalcApp:Web:Server:Proxy To External:Guest
-HTTPS/GET-Reponse
+HTTPS/GET-Reponse without Token
 
 ```
-# @connects #proxy to #guest with HTTPS/GET-Reponse
+# @connects #proxy to #guest with HTTPS/GET-Reponse without Token
 
 
 @flask_app.route('/')

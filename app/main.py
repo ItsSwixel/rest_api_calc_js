@@ -105,12 +105,12 @@ def calculator():
 
 
 # @component External:User (#user)
-# @connects #user to #proxy with HTTPS/GET-Request
-# @connects #proxy to #user with HTTPS/GET-Response
+# @connects #user to #proxy with HTTPS/GET-Request with Token
+# @connects #proxy to #user with HTTPS/GET-Response with Token
 
 # @component External:Guest (#guest)
-# @connects #guest to #proxy with HTTPS/GET-Request
-# @connects #proxy to #guest with HTTPS/GET-Reponse
+# @connects #guest to #proxy with HTTPS/GET-Request without Token
+# @connects #proxy to #guest with HTTPS/GET-Reponse without Token
 
 # @component External:Developer SSH (#ssh)
 # @connects #ssh to #proxy with SSH
